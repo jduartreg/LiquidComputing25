@@ -13,6 +13,9 @@
 		},
 		{
 			"path": "../KCCC-ObsidianLight"
+		},
+		{
+			"path": "../ESP_Mutlichannel_OSC"
 		}
 	],
 	"settings": {}

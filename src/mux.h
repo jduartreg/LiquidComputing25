@@ -197,3 +197,70 @@ void all_mux(){
     }
     delay(250);
 }
+
+struct OutputAction {
+  int channel;             // 0–15 or however many channels you use
+  unsigned long duration;  // milliseconds
+  const char* name;        // optional label
+};
+
+// OutputAction sequence[] = {
+//   {6, 500, "out7"},   // 1s of out7
+//   {-1, 2000, "pause"},  // special pause (no output)
+//   {0, 1000, "out1"},   // 2s of out1
+//   {-1, 1000, "pause"}  // special pause (no output)
+//   {0, 1000, "out1"},   // 2s of out1
+//   {-1, 1000, "pause"},  // special pause (no output)
+//   {0, 2000, "out1"},   // 2s of out1
+//   {-1, 1000, "pause"}  // special pause (no output)
+// };
+
+
+// Example sequence (can be updated anytime)
+OutputAction sequence[] = {
+  {6, 500, "out7"},   // 1s of out7
+  {-1, 1000, "pause"},   // 5s of out5
+  {0, 5000, "out1"},   // 2s of out1
+  {-1, 5000, "pause"}  // special pause (no output)
+};
+
+const int sequenceLength = sizeof(sequence) / sizeof(sequence[0]);
+
+int currentStep = 0;
+bool stepActive = false;
+unsigned long stepStartTime = 0;
+
+void mux_sequence_runner() {
+  unsigned long now = millis();
+
+  if (!stepActive) {
+    // Start next step
+    OutputAction &action = sequence[currentStep];
+    if (action.channel >= 0) {
+      output_mux.channel(action.channel);
+      digitalWrite(g_common_output, HIGH);
+      Serial.printf("Starting %s (channel %d) for %lu ms\n", 
+                    action.name, action.channel, action.duration);
+    } else {
+      // Pause
+      digitalWrite(g_common_output, LOW);
+      Serial.printf("Pausing for %lu ms\n", action.duration);
+    }
+
+    stepStartTime = now;
+    stepActive = true;
+  }
+
+  if (stepActive && now - stepStartTime >= sequence[currentStep].duration) {
+    // End this step
+    digitalWrite(g_common_output, LOW);
+    stepActive = false;
+    currentStep++;
+
+    if (currentStep >= sequenceLength) {
+      // sequence done, reset or stop
+      currentStep = 0; // repeat sequence
+      Serial.println("Sequence complete, restarting...");
+    }
+  }
+}
