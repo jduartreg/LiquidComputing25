@@ -31,6 +31,17 @@ void setup_adc(void)
   }
 }
 
+void water_sensor(){
+  int x = analogRead(A0);
+  Serial.printf("Analog read A0: %d\n", x);
+  delay(250);
+  if(x < 1000){
+    digitalWrite(LED_BUILTIN, LOW);  
+  } else{
+    digitalWrite(LED_BUILTIN, HIGH);  
+  }
+}
+
 void loop_adc(void)
 {
     int16_t sum = 0;
@@ -61,3 +72,4 @@ void loop_adc(void)
 
   delay(100);
 }
+
