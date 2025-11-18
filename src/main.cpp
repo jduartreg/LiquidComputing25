@@ -5,33 +5,46 @@
 #include "pwm.h" // Pulse Width Modulation for Pumps amount of speed control
 #include "temperature.h"
 #include "bmp.h" // BMP280 Temperature and Pressure Sensor
+#include "heartbeat.h"
+#include "displayA.h" // OLED Display
+#include "touch.h" // MPR121 Capacitive Touch Sensor
 
-#define LED_BUILTIN 8
+
 
 void setup() {
   Serial.begin(115200);
-  setup_mux();
-  // setup_bmp();
-  
+  // set_scan();
+  setup_bmp();
+  // set_disA();
+  // setup_touch();
 
-
+  // setup_mux();
+  // setup_heartbeat();
   // setup_pwm();
   // pinMode(7, INPUT);
-  //setup_temperature();
+  // setup_temperature();
   // setup_adc();
-  // set_scan();
   // setup_air();
-
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
 
 }
 
 void loop() {
+  loop_bmp();
+  delay(500);
+
+
+  // plotValues();
+  // displayTouchedChannel();
+  // delay(10);
+
+  //scani2c();
+  // set_disA();
+
+  // loop_heartbeat();
+  // mux_sequence_runner();
+
   // loop_bmp();
-
   // printPressure();
-
   // int x = digitalRead(7);
   // // Serial.print("Analog Read Pin 7: ");
   // // Serial.println(x);
@@ -46,9 +59,8 @@ void loop() {
   // ramp();
   // pump_half_speed();
   // delay(100);
-  mux_sequence_runner();
   // lfo();
-  // scani2c();
+  
   // loop_adc();
   //loop_temperature();
 }
@@ -60,3 +72,4 @@ void ldr(){
   Serial.println(sensorValue);
   delay(100);
 }
+

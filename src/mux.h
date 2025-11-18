@@ -1,4 +1,7 @@
 #include <CD74HC4067.h>
+#include <stdbool.h>
+extern unsigned long ibi;
+bool heartbeatPulseState = false;
 #define pin1 0 //configuration of multiplexer pins
 #define pin2 1 
 #define pin3 2 
@@ -44,10 +47,11 @@ struct OutputAction {
 
 OutputAction sequence[] = { // Here you create a sequence
   {0, 1000, "12V-1"},   
-  {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label  
-  {8, 1000, "5V-1"},   
-  {-1, 1000, "pause"},    
+  {0, 0, "heartbeat-sync"}, // duration will be replaced by ibi dynamically
+  {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label   
 };
+
+
 // OutputAction sequence[] = { // Here you create a sequence
 //   {2, 250, "valve1"},   
 //   {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label  
@@ -67,24 +71,48 @@ void mux_sequence_runner() {
   unsigned long now = millis();
 
   if (!stepActive) {
-    // Start next step
-    OutputAction &action = sequence[currentStep];
-    if (action.channel >= 0) {
-      output_mux.channel(action.channel);
-      digitalWrite(g_common_output, HIGH);
-      Serial.printf("Starting %s (channel %d) for %lu ms\n", 
-                    action.name, action.channel, action.duration);
-    } else {
-      // Pause
-      digitalWrite(g_common_output, LOW);
-      Serial.printf("Pausing for %lu ms\n", action.duration);
-    }
+      OutputAction &action = sequence[currentStep];
 
-    stepStartTime = now;
-    stepActive = true;
+      if (strcmp(action.name, "heartbeat-sync") == 0) {
+          if (heartbeatPulseState) {
+              output_mux.channel(action.channel);
+              digitalWrite(g_common_output, HIGH);
+              Serial.println("Heartbeat pulse ON");
+          } else {
+              digitalWrite(g_common_output, LOW);
+              Serial.println("Heartbeat pulse OFF");
+          }
+          stepStartTime = now;
+          stepActive = true;
+          return;
+      }
+
+      if (action.channel >= 0) {
+          output_mux.channel(action.channel);
+          digitalWrite(g_common_output, HIGH);
+          Serial.printf("Starting %s (channel %d) for %lu ms\n",
+                        action.name, action.channel, action.duration);
+      } else {
+          digitalWrite(g_common_output, LOW);
+          Serial.printf("Pausing for %lu ms\n", action.duration);
+      }
+
+      stepStartTime = now;
+      stepActive = true;
   }
 
-  if (stepActive && now - stepStartTime >= sequence[currentStep].duration) {
+  if (strcmp(sequence[currentStep].name, "heartbeat-sync") == 0) {
+      if (!heartbeatPulseState) {
+          digitalWrite(g_common_output, LOW);
+          stepActive = false;
+          currentStep++;
+      }
+      return;
+  }
+
+  unsigned long effectiveDuration = sequence[currentStep].duration;
+
+  if (stepActive && now - stepStartTime >= effectiveDuration) {
     // End this step
     digitalWrite(g_common_output, LOW);
     stepActive = false;

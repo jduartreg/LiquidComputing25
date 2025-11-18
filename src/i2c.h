@@ -45,5 +45,5 @@ void scani2c()
   else
     Serial.println("done\n");
 
-  delay(1000); // wait 5 seconds for the next I2C scan
+  delay(500); // wait 5 seconds for the next I2C scan
 }
