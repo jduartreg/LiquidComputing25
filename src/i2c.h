@@ -1,11 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-void set_scan(){
-    Wire.begin(); // Wire communication begin
-    
-    while (!Serial); // Waiting for Serial Monitor
-    Serial.println("\nI2C Scanner");
+void set_scan() {
+  delay(300);
+  Wire.begin();
+  Serial.println("\nI2C Scanner");
 }
 
 void scani2c()
@@ -46,5 +45,5 @@ void scani2c()
   else
     Serial.println("done\n");
 
-  delay(5000); // wait 5 seconds for the next I2C scan
+  delay(1000); // wait 5 seconds for the next I2C scan
 }

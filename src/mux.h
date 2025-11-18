@@ -1,9 +1,9 @@
 #include <CD74HC4067.h>
-#define pin1 0 
+#define pin1 0 //configuration of multiplexer pins
 #define pin2 1 
 #define pin3 2 
 #define pin4 3 
-#define pin5 21
+#define pin5 21 //common output pin
 const int g_common_output = pin5;
 
 
@@ -43,13 +43,19 @@ struct OutputAction {
 };
 
 OutputAction sequence[] = { // Here you create a sequence
-  {10, 250, "out15"},   
-  {-1, 5000, "pause"},   
-  {15, 150, "out15"},   
-  {-1, 5000, "pause"},  
-  {12, 250, "pause"},
-  {-1, 5000, "pause"},   
+  {0, 1000, "12V-1"},   
+  {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label  
+  {8, 1000, "5V-1"},   
+  {-1, 1000, "pause"},    
 };
+// OutputAction sequence[] = { // Here you create a sequence
+//   {2, 250, "valve1"},   
+//   {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label  
+//   {12, 150, "airpump"},   
+//   {-1, 1000, "pause"},  
+//   {2, 150, "valve1"},
+//   {-1, 1000, "pause"},   
+// };
 
 const int sequenceLength = sizeof(sequence) / sizeof(sequence[0]);
 

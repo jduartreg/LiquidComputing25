@@ -17,5 +17,27 @@ void ramp(){
         analogWrite(PWM3_CHANNEL, duty);
         delay(10);
     }
-    
+}
+
+void pump_half_speed(){
+    analogWrite(PWM1_CHANNEL, 128); //128 half speed
+    analogWrite(PWM2_CHANNEL, 128);
+    analogWrite(PWM3_CHANNEL, 128);
+}
+
+void lfo() {
+    // Rising phase 0 → 255
+    for (int duty = 0; duty <= 255; duty++) {
+        analogWrite(PWM1_CHANNEL, duty);
+        analogWrite(PWM2_CHANNEL, duty);
+        analogWrite(PWM3_CHANNEL, duty);
+        delay(10);
+    }
+    // Falling phase 255 → 0
+    for (int duty = 255; duty >= 0; duty--) {
+        analogWrite(PWM1_CHANNEL, duty);
+        analogWrite(PWM2_CHANNEL, duty);
+        analogWrite(PWM3_CHANNEL, duty);
+        delay(10);
+    }
 }

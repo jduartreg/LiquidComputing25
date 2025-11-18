@@ -1,9 +1,6 @@
 {
 	"folders": [
 		{
-			"path": "../../../Aalto/Liquid Computing/ESP32"
-		},
-		{
 			"name": "LiquidComputing25",
 			"path": "."
 		},
@@ -16,6 +13,9 @@
 		},
 		{
 			"path": "../ESP_Mutlichannel_OSC"
+		},
+		{
+			"path": "../KCCC-WeatherStation"
 		}
 	],
 	"settings": {}
