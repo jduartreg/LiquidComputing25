@@ -36,7 +36,7 @@ void setup_bmp() {
   Serial.println(F("BMP280 test"));
   unsigned status;
   //status = bmp.begin(BMP280_ADDRESS_ALT, BMP280_CHIPID);
-  status = bmp.begin();
+  status = bmp.begin(0x76);
   if (!status) {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
                       "try a different address!"));
@@ -63,7 +63,7 @@ bool printBMP = true;
 
 void loop_bmp() {
     long int t = millis()/1000;
-    if(t%60 == 0){
+    if(t%2 == 0){
       temperature = bmp.readTemperature();
       pressure = bmp.readPressure();
       Serial.println(pressure);
@@ -82,5 +82,5 @@ void loop_bmp() {
         Serial.println();
       }
     }
-    delay(250);
+    delay(100);
 }

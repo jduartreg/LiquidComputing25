@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include "mux.h" // Multiplexer for Valves, Pumps, and Motors 1-0 
+#include "heartbeat.h"
 #include "adc.h" // analog sensors Analog to Digital Converter
 #include "i2c.h" // Detect digital I2C devices
 #include "pwm.h" // Pulse Width Modulation for Pumps amount of speed control
 #include "temperature.h"
 #include "bmp.h" // BMP280 Temperature and Pressure Sensor
-#include "heartbeat.h"
 #include "displayA.h" // OLED Display
 #include "touch.h" // MPR121 Capacitive Touch Sensor
 
@@ -13,13 +13,15 @@
 
 void setup() {
   Serial.begin(115200);
+  // setup_mux();
+  // setup_heartbeat();
+
   // set_scan();
-  setup_bmp();
+  // setup_bmp();
+  // loop_bmp();
   // set_disA();
   // setup_touch();
 
-  // setup_mux();
-  // setup_heartbeat();
   // setup_pwm();
   // pinMode(7, INPUT);
   // setup_temperature();
@@ -29,18 +31,14 @@ void setup() {
 }
 
 void loop() {
-  loop_bmp();
-  delay(500);
-
-
+  // loop_bmp();
+  // scani2c();
+  // displayTouchedChannel(currTouched);
   // plotValues();
-  // displayTouchedChannel();
-  // delay(10);
-
-  //scani2c();
-  // set_disA();
-
   // loop_heartbeat();
+  // delay(500);
+  // delay(10);
+  // set_disA();
   // mux_sequence_runner();
 
   // loop_bmp();

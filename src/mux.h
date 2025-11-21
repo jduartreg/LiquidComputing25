@@ -26,15 +26,15 @@ void setup_mux() {
 
 void all_mux(){
    digitalWrite(g_common_output, HIGH);
-    for (int i = 0; i < 16; i++) { //16 max
+    for (int i = 0; i < 4; i++) { //16 max
         output_mux.channel(i);
-        delay(50);
+        delay(100);
     }
     delay(250);
    digitalWrite(g_common_output, LOW);
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 4; i++) {
         output_mux.channel(i);
-        delay(50);
+        delay(100);
     }
     delay(250);
 }
