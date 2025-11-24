@@ -8,12 +8,14 @@
 #include "bmp.h" // BMP280 Temperature and Pressure Sensor
 #include "displayA.h" // OLED Display
 #include "touch.h" // MPR121 Capacitive Touch Sensor
-
+#include "stepper.h" // Stepper Motor Control
 
 
 void setup() {
   Serial.begin(115200);
-  // setup_mux();
+  setup_mux();
+  setup_stepper();
+
   // setup_heartbeat();
 
   // set_scan();
@@ -31,15 +33,16 @@ void setup() {
 }
 
 void loop() {
+  loop_stepper();
+  mux_sequence_runner();
+  // loop_heartbeat();
   // loop_bmp();
   // scani2c();
   // displayTouchedChannel(currTouched);
   // plotValues();
-  // loop_heartbeat();
   // delay(500);
   // delay(10);
   // set_disA();
-  // mux_sequence_runner();
 
   // loop_bmp();
   // printPressure();

@@ -2,23 +2,25 @@
 #include <stdbool.h>
 extern unsigned long ibi;
 bool heartbeatPulseState = false;
-#define pin1 0 //configuration of multiplexer pins
-#define pin2 1 
-#define pin3 2 
-#define pin4 3 
-#define pin5 21 //common output pin
-const int g_common_output = pin5;
+
+#define pen2 1 
+#define pen3 2 
+#define pen4 3 
+#define pen1 0 //configuration of multiplexer pins
+
+#define pen5 21 //common output pin
+const int g_common_output = pen5;
 
 
-CD74HC4067 output_mux(pin1,pin2,pin3,pin4);
+CD74HC4067 output_mux(pen1,pen2,pen3,pen4);
 int incomingByte = 0; // for incoming serial data
 
 void setup_mux() {
-  pinMode(pin1, OUTPUT);
-  pinMode(pin2, OUTPUT);
-  pinMode(pin3, OUTPUT);
-  pinMode(pin4, OUTPUT); 
-  pinMode(pin5, OUTPUT);
+  pinMode(pen1, OUTPUT);
+  pinMode(pen2, OUTPUT);
+  pinMode(pen3, OUTPUT);
+  pinMode(pen4, OUTPUT); 
+  pinMode(pen5, OUTPUT);
   digitalWrite(g_common_output, LOW);
   delay(1000);
   Serial.println("ESP32-C3 MUX test");
@@ -46,8 +48,7 @@ struct OutputAction {
 };
 
 OutputAction sequence[] = { // Here you create a sequence
-  {0, 1000, "12V-1"},   
-  {0, 0, "heartbeat-sync"}, // duration will be replaced by ibi dynamically
+  {8, 10, "MGE"},   
   {-1, 1000, "pause"}, // pinNumber, ms miliseconds, label   
 };
 

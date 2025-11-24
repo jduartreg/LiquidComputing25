@@ -1,42 +1,31 @@
+#pragma once
 #include <Arduino.h>
 
-#define HEARTBEAT_PIN 20
+const int HEART_PIN = 7;       // your digital pulse pin (D0 from sensor)
+//extern int g_common_output;    // defined elsewhere
 
-unsigned long lastBeat = 0;
-unsigned long ibi = 600;  // ms between beats (default)
-int bpm = 0;
-
-bool prevState = LOW;
+// For detecting rising edges
+static bool prevState = LOW;
 
 void setup_heartbeat() {
-    pinMode(HEARTBEAT_PIN, INPUT);
+    pinMode(HEART_PIN, INPUT);
 }
 
 void loop_heartbeat() {
-    bool state = digitalRead(HEARTBEAT_PIN);
-    output_mux.channel(1);
+    bool state = digitalRead(HEART_PIN);
 
+    // detect a rising edge: LOW → HIGH
     if (state == HIGH && prevState == LOW) {
-        unsigned long now = millis();
-        unsigned long interval = now - lastBeat;
+        Serial.println("Beat");
 
-        if (interval > 250 && interval < 2000) {
-            all_mux();
-            ibi = interval;
-            bpm = 60000 / ibi;
-
-            // Serial.print("Beat detected — BPM: ");
-            // Serial.print(bpm);
-            // Serial.print("   IBI: ");
-            // Serial.println(ibi);
-        }
-
-        lastBeat = now;
+        // trigger output for debugging or pulse-driving
+        digitalWrite(g_common_output, HIGH);
+        delay(30); // short pulse width (30–50 ms usually enough)
+        digitalWrite(g_common_output, LOW);
     }
-    
 
     prevState = state;
-    digitalWrite(g_common_output, LOW);
 
-    
+    // small delay to reduce bounce and CPU noise
+    delay(5);
 }
